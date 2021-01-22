@@ -1,0 +1,78 @@
+type User {
+# address is a unique bitcoin address issued by the server
+  address: String!
+  balanceSats: String
+  handle: String # unique
+  following: String
+  followers: String
+  posts: [Post]
+  mutuals: String # Computed from followers and following
+  bio: String
+}
+
+type Post {# time and message encoded in OP_RETURN?
+  address: String
+  time: Int
+  message: String
+}
+
+type Thread {
+  address: String # Original Post's address
+  posts: [Post]## time-sorted replies to post from those I follow
+}
+
+type Timeline {
+  user: User
+  posts: [Post]
+}
+
+type PostTransaction {
+  address: String
+  userAddress: String
+  txInfo: Transaction
+}
+
+type Transaction {
+  post: Post
+  time: Int
+  to: String
+  from: String
+  feeRate: Int # sats/byte
+}
+
+# auth
+input getAuthTokenInput {
+  handle: String
+  password: String
+}
+
+type Registration {
+  address: String!
+  handle: String!
+  pwdHash: String!
+}
+
+type AuthToken {
+  token: String
+}
+
+# Queries and mutations
+#type Mutation {
+   # createUser(id: String): Campaign
+   # updateUser(id: String, input: updateMediaDetailsInput): Campaign
+   # removeUser(id: String): Campaign
+   # addInvited
+   # removeInvited
+   # createPost
+   # replyPost
+#}
+
+type Query {
+  getUser(address: String): User
+  getAuthToken(input: getAuthTokenInput): AuthToken 
+#  getPost(searchTerm: String): [Campaign]
+#  getThread: [Campaign]
+#  getTimeline(id: String, tip: Float, confirmedInNBlocks: Int,  txMessage: String): Campaign
+#  getTx(): Transaction
+}
+

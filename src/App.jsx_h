@@ -1,0 +1,125 @@
+import React, { useContext, createContext, useState } from 'react'
+import ReactDOM from 'react-dom';
+import {ProvideAuth, useAuth} from './Auth.jsx'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from "react-router-dom";
+
+function AuthButton() {
+  let history = useHistory();
+  let auth = useAuth();
+
+  console.log(auth)
+  return auth.isAuthenticated() ? (
+    <p>
+      Welcome {auth.handle}!{" "}
+      <button
+	onClick={() => {
+	  auth.signout(() => history.push("/"));
+	}}
+      >
+	Sign out
+      </button>
+    </p>
+  ) : (
+    <p>You are not logged in.</p>
+  );
+}
+
+function PublicPage() {
+  return <h3>Public</h3>;
+}
+
+function Home() {
+  return <h3>Home</h3>;
+}
+
+function LoginPage() {
+  let history = useHistory();
+  let location = useLocation();
+  let auth = useAuth();
+
+  let { from } = location.state || { from: { pathname: "/" } };
+  let login = () => {
+    auth.signin(() => {
+      history.replace(from);
+    });
+  };
+
+  return (
+    <div>
+      <p>You must log in to view the page at {from.pathname}</p>
+      <button onClick={login}>Log in</button>
+    </div>
+  );
+}
+
+
+let App = () =>{
+  return (
+    <ProvideAuth>
+      <Router>
+	<div>
+	  <AuthButton />
+	  <ul>
+	    <li>
+	      <Link to="/public">Public Page</Link>
+	    </li>
+	    <li>
+	      <Link to="/home">Home</Link>
+	    </li>
+	  </ul>
+
+	  <Switch>
+	    <Route path="/public">
+	      <PublicPage />
+	    </Route>
+	    <Route path="/login">
+	      <LoginPage />
+	    </Route>
+	    <PrivateRoute path="/home">
+	      <Home />
+	    </PrivateRoute>
+	  </Switch>
+	</div>
+      </Router>
+    </ProvideAuth>
+  );
+}
+
+
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated.
+function PrivateRoute({ children, ...rest }) {
+  let auth = useAuth();
+console.log('in private route ', auth)
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+	  auth.isAuthenticated()? (
+	    children
+	  ) : (
+	    <Redirect
+	      to={{
+		pathname: "/login",
+		state: { from: location }
+	      }}
+	    />
+	  )
+      }
+    />
+  );
+}
+
+
+
+ReactDOM.render(
+  <App/>, document.getElementById('App')
+);

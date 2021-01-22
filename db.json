@@ -1,0 +1,21 @@
+{
+  {
+    "Users": [
+      {
+	"address": "bc1q6dnngs96rcq7pp87a9gyaj84qa9wdrpf92klft", 
+	"handle": "paul", 
+	"bio": "chillin",
+	"followers": "nick" ,
+	"following": "nick" ,
+	"pwdHash" : "a027184a55211cd23e3f3094f1fdc728df5e0500"},
+      {
+	"address": "bc1qmt0pxfjxxqr3u6xxzqaj03qxzll99chlul5x4w", 
+	"handle": "nick", 
+	"bio": "surfin",
+	"followers": "paul" ,
+	"following": "paul" ,
+	"pwdHash" : "75ef9faee755c70589550b513ad881e5a603182c"}
+    ]}
+
+
+}

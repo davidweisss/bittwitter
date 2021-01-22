@@ -1,0 +1,6 @@
+auth/
+*.swp
+bitcoinRPCConf.json
+jwtSecret.json
+node_modules/
+package-lock.json
