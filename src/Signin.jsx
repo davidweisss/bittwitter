@@ -22,26 +22,21 @@ const client = new ApolloClient({
 let credentials = {handle:'nick', password: 'nick'}
 
 const TOKEN = gql`
-query {
+query ($handle: String!, $password: String!){
   getAuthToken(input:{
-    handle: "${credentials.handle}", 
-      password: "${credentials.password}"
+    handle: $handle, 
+      password: $password
   }
   ){
     token
   }
 }
 `
-function useUrlQuery() {
-    return new URLSearchParams(useLocation().search);
-}
-const Token = (gqlQuery)=> {
+const Token = (props)=> {
 
+  console.log(props.password, props.handle)
+  const { data, loading, error } = useQuery(props.gqlQuery, {variables: {handle: props.handle, password: props.password}});
 
-  const { data, loading, error } = useQuery(gqlQuery.gqlQuery);
-
-  const query = useUrlQuery()
-  
     
   if (loading) return (
       <div>Logging in...
@@ -60,9 +55,10 @@ const Token = (gqlQuery)=> {
   return(<Redirect to='/protected'/>)
 }
 
-let Signin =()=> 
+let Signin =(props)=> 
   <ApolloProvider client={client}>
-    <Token gqlQuery={TOKEN}/>
+    <Token gqlQuery={TOKEN} handle={props.handle} password={props.password}/>
   </ApolloProvider>
+
 
 export { Signin }

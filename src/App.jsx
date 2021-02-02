@@ -30,6 +30,14 @@ let App = () =>{
 	      path="/"
 	        render={(props) => <Navigation key={props.location.key} />}
 	    />
+	    <ul>
+	      <li>
+		<Link to="/public">Public Page</Link>
+	      </li>
+	      <li>
+		<Link to="/protected">Protected Page</Link>
+	      </li>
+	    </ul>
 
 	    <Switch>
 	      <Route path="/public">
@@ -37,9 +45,6 @@ let App = () =>{
 	      </Route>
 	      <Route path="/login">
 		<LoginPage />
-	      </Route>
-	      <Route path="/signin">
-		<Signin /> 
 	      </Route>
 	      <PrivateRoute path="/protected">
 		<ProtectedPage />
@@ -55,6 +60,7 @@ function Navigation() {
   let history = useHistory();
   let auth = useAuth();
 
+  console.log(auth.isAuthenticated())
   return (
     <>
       {auth.isAuthenticated() && 
@@ -72,14 +78,6 @@ function Navigation() {
       {!auth.isAuthenticated() && 
 	<p>You are not logged in.</p>
       }
-      <ul>
-	<li>
-	  <Link to="/public">Public Page</Link>
-	</li>
-	<li>
-	  <Link to="/protected">Protected Page</Link>
-	</li>
-      </ul>
     </> 
   )
 }
